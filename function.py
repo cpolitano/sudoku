@@ -17,11 +17,16 @@ def create_board():
 def grid_values(board_values):
     values = {}
     board = create_board()
-    if len(board) == len(board_values):
+    if len(board_values) == 81:
         counter = 0
-        for b in board:
-            values[b] = board_values[counter]
-            counter++
+        for unit in range(0,8):
+            row_boxes = board[unit]
+            for box in row_boxes:
+                values[box] = board_values[counter]
+                counter += 1
     else:
         raise ValueError('invalid board values. pls do better')
     return values
+
+grid = grid_values('..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..');
+print(grid)
