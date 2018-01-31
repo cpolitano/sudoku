@@ -1,33 +1,10 @@
 # setting up the soduku board
+from utils import *
 
-rows = 'ABCDEFGHI'
-cols = '123456789'
+test_string = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
 
-def cross(a, b):
-    return [s+t for s in a for t in b]
-
-def create_board():
-    boxes = cross(rows, cols)
-    row_units = [cross(r, cols) for r in rows]
-    column_units = [cross(rows, c) for c in cols]
-    square_units = [cross(rs, cs) for rs in ('ABC','DEF','GHI') for cs in ('123','456','789')]
-    unitlist = row_units + column_units + square_units
-    return unitlist
-
-def grid_values(board_values):
-    values = {}
-    board = create_board()
-    assert len(board_values) == 81
-    counter = 0
-    for unit in range(0,8):
-        row_boxes = board[unit]
-        for box in row_boxes:
-            values[box] = board_values[counter]
-            counter += 1
-    return values
-
-def zip_grid(board_values):
-    boxes = cross(rows, cols)
+def assign_grid(board_values):
+    """assign initial values to grid spaces"""
     values = []
     all_digits = '123456789'
     for number in board_values:
@@ -38,4 +15,15 @@ def zip_grid(board_values):
     assert len(values) == 81
     return dict(zip(boxes, values))
 
-print(zip_grid('..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'))
+# print(assign_grid(test_string))
+
+def eliminate(values):
+    """iterate over all boxes, and for any box with only one value, remove that value from all peer boxes"""
+    solved_values = [box for box in values.keys() if len(values[box]) == 1] # select boxes with one digit
+    for box in solved_values:
+        digit = values[box]
+        for peer in peers[box]:
+            values[peer] = values[peer].replace(digit, '')
+    return values
+
+print(eliminate(assign_grid(test_string)))
