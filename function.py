@@ -28,6 +28,14 @@ def grid_values(board_values):
 
 def zip_grid(board_values):
     boxes = cross(rows, cols)
-    return dict(zip(boxes, board_values))
+    values = []
+    all_digits = '123456789'
+    for number in board_values:
+        if number == '.':
+            values.append(all_digits)
+        elif number in all_digits:
+            values.append(number)
+    assert len(values) == 81
+    return dict(zip(boxes, values))
 
 print(zip_grid('..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'))
