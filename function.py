@@ -26,5 +26,8 @@ def grid_values(board_values):
             counter += 1
     return values
 
-grid = grid_values('..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..');
-print(grid)
+def zip_grid(board_values):
+    boxes = cross(rows, cols)
+    return dict(zip(boxes, board_values))
+
+print(zip_grid('..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'))
