@@ -2,11 +2,11 @@
 from utils import *
 
 test_string = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
+all_digits = '123456789'
 
 def assign_grid(board_values):
     """assign initial values to grid spaces"""
     values = []
-    all_digits = '123456789'
     for number in board_values:
         if number == '.':
             values.append(all_digits)
@@ -26,4 +26,21 @@ def eliminate(values):
             values[peer] = values[peer].replace(digit, '')
     return values
 
-print(eliminate(assign_grid(test_string)))
+# print(eliminate(assign_grid(test_string)))
+
+def only_values(values):
+    """iterate over boxes, and assign any values that are only possible for a box"""
+    for unit in unitlist:
+        digits = {}
+        for digit in all_digits:
+            digit_boxes = [];
+            for box in unit:
+                if digit in values[box]:
+                    digit_boxes.append(box)
+            if len(digit_boxes) == 1:
+                values[digit_boxes[0]] = digit
+    return values
+
+grid = assign_grid(test_string)
+eliminated = eliminate(grid)
+print(only_values(eliminated))
