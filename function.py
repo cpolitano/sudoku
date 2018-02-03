@@ -1,4 +1,6 @@
 # setting up the soduku board
+import pprint
+pp = pprint.PrettyPrinter()
 from utils import *
 
 test_string = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
@@ -50,24 +52,26 @@ def count_boxes(values, desired_count):
 def reduce_puzzle(values):
     stalled_or_solved = False
     while not stalled_or_solved:
-        print('reducing puzzle...')
         solved_values_before = count_boxes(values, 1)
         eliminate(values)
         only_choice(values)
         solved_values_after = count_boxes(values, 1)
-        stalled_or_solved = solved_values_before == solved_values_after | solved_values_after == 81
+        stalled_or_solved = solved_values_before == solved_values_after or solved_values_after == 81
+        print(stalled_or_solved)
         if count_boxes(values, 0) > 0:
             return False
     return values
 
 def search(values):
     values = reduce_puzzle(values)
+    pp.pprint(values)
     if values == False:
         return False
-    if all(box for box in values if len(values[box]) == 1):
+    if all(len(values[box]) == 1 for box in values):
+        print('solved')
         return values # if all boxes have 1 value, puzzle is solved
     unsolved_boxes = [box for box in values if len(values[box]) > 1]
-    print(unsolved_boxes)
+    print('unsolved boxes', unsolved_boxes)
     # closest_unsolved_box = min([box for ])
 
 
