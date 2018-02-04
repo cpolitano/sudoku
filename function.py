@@ -57,22 +57,24 @@ def reduce_puzzle(values):
         only_choice(values)
         solved_values_after = count_boxes(values, 1)
         stalled_or_solved = solved_values_before == solved_values_after or solved_values_after == 81
-        print(stalled_or_solved)
         if count_boxes(values, 0) > 0:
             return False
     return values
 
 def search(values):
     values = reduce_puzzle(values)
-    pp.pprint(values)
     if values == False:
         return False
     if all(len(values[box]) == 1 for box in values):
-        print('solved')
         return values # if all boxes have 1 value, puzzle is solved
     unsolved_boxes = [box for box in values if len(values[box]) > 1]
-    print('unsolved boxes', unsolved_boxes)
-    # closest_unsolved_box = min([box for ])
+    box_count, closest_unsolved_box = min((len(values[box]), box) for box in unsolved_boxes)
+    for value in values[closest_unsolved_box]:
+        sudoku_attempt = values.copy()
+        sudoku_attempt[closest_unsolved_box] = value
+        solved_puzzle = search(sudoku_attempt)
+        if solved_puzzle:
+            return solved_puzzle
 
 
 grid = assign_grid(another_string)
