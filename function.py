@@ -75,5 +75,5 @@ def search(values):
             return solved_puzzle
 
 
-grid = assign_grid(another_string)
+grid = assign_grid(test_string)
 search(grid)
