@@ -4,6 +4,7 @@ from utils import *
 test_string = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8..2.3..9..5.1.3..'
 another_string = '..3.2.6..9..3.5..1...8..4....81.29..7.......8..6..82.....6.95..8..2.3..9..5.1.3..'
 harder_string = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
+diagonal_string = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
 all_digits = '123456789'
 
 def assign_grid(board_values):
@@ -71,9 +72,10 @@ def search(values):
         sudoku_attempt = values.copy()
         sudoku_attempt[closest_unsolved_box] = value
         solved_puzzle = search(sudoku_attempt)
+        print(solved_puzzle)
         if solved_puzzle:
             return solved_puzzle
 
 
-grid = assign_grid(test_string)
+grid = assign_grid(diagonal_string)
 search(grid)
