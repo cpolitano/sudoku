@@ -18,8 +18,6 @@ def assign_grid(board_values):
     assert len(values) == 81
     return dict(zip(boxes, values))
 
-# print(assign_grid(test_string))
-
 def eliminate(values):
     """iterate over all boxes, and for any box with only one value, remove that value from all peer boxes"""
     solved_values = [box for box in values.keys() if len(values[box]) == 1] # select boxes with one digit
@@ -29,7 +27,29 @@ def eliminate(values):
             values[peer] = values[peer].replace(digit, '')
     return values
 
-# print(eliminate(assign_grid(test_string)))
+def naked_twins(values):
+    doubles_values = [box for box in values.keys() if len(values[box]) == 2] # select boxes with two digits
+    # evaluate units of each double to check for twins
+    for double in doubles_values:
+        twin = values[double] # ex 23, 45, 53
+        for unit in units[double]:
+            twin_exists = False
+            for box in unit:
+                if values[box] == twin:
+                    twin_exists = True
+                    break
+            if twin_exists:
+                for box in unit:
+                    potential_twin = values[box]
+                    first_twin = twin[0]
+                    second_twin = twin[1]
+                    # match 27 and 2347
+                    if any(digit == first_twin for digit in potential_twin) and any(digit == second_twin for digit in potential_twin) and potential_twin != twin:
+                        # remove twins from all other unit boxes
+                        print('replacing twin', potential_twin, twin)
+                        values[box] = values[box].replace(first_twin, '')
+                        values[box] = values[box].replace(second_twin, '')
+    return values
 
 def only_choice(values):
     """iterate over boxes, and assign any values that are only possible for a box"""
@@ -53,10 +73,13 @@ def reduce_puzzle(values):
     while not stalled_or_solved:
         solved_values_before = count_boxes(values, 1)
         eliminate(values)
+        naked_twins(values)
         only_choice(values)
         solved_values_after = count_boxes(values, 1)
         stalled_or_solved = solved_values_before == solved_values_after or solved_values_after == 81
+        print(stalled_or_solved)
         if count_boxes(values, 0) > 0:
+            print('empty boxes')
             return False
     return values
 
@@ -65,6 +88,7 @@ def search(values):
     if values == False:
         return False
     if all(len(values[box]) == 1 for box in values):
+        print('solved!')
         return values # if all boxes have 1 value, puzzle is solved
     unsolved_boxes = [box for box in values if len(values[box]) > 1]
     box_count, closest_unsolved_box = min((len(values[box]), box) for box in unsolved_boxes)
@@ -74,8 +98,10 @@ def search(values):
         solved_puzzle = search(sudoku_attempt)
         print(solved_puzzle)
         if solved_puzzle:
+            print('solved!')
             return solved_puzzle
 
 
 grid = assign_grid(diagonal_string)
 search(grid)
+# naked_twins(before_naked_twins_1)
