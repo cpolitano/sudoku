@@ -28,14 +28,15 @@ def eliminate(values):
     return values
 
 def naked_twins(values):
-    doubles_values = [box for box in values.keys() if len(values[box]) == 2] # select boxes with two digits
+    doubles_values = [box for box in values if len(values[box]) == 2] # select boxes with two digits
     # evaluate units of each double to check for twins
     for double in doubles_values:
         twin = values[double] # ex 23, 45, 53
         for unit in units[double]:
+            print(unit)
             twin_exists = False
             for box in unit:
-                if values[box] == twin:
+                if values[box] == twin and double != box:
                     twin_exists = True
                     break
             if twin_exists:
@@ -43,10 +44,10 @@ def naked_twins(values):
                     potential_twin = values[box]
                     first_twin = twin[0]
                     second_twin = twin[1]
+                    print(first_twin, second_twin, potential_twin)
                     # match 27 and 2347
                     if any(digit == first_twin for digit in potential_twin) and any(digit == second_twin for digit in potential_twin) and potential_twin != twin:
                         # remove twins from all other unit boxes
-                        print('replacing twin', potential_twin, twin)
                         values[box] = values[box].replace(first_twin, '')
                         values[box] = values[box].replace(second_twin, '')
     return values
