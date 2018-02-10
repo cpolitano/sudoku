@@ -5,6 +5,7 @@ test_string = '..3.2.6..9..3.5..1..18.64....81.29..7.......8..67.82....26.95..8.
 another_string = '..3.2.6..9..3.5..1...8..4....81.29..7.......8..6..82.....6.95..8..2.3..9..5.1.3..'
 harder_string = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
 diagonal_string = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
+diagonal_2 = '1......2.....9.5...............8...4.........9..7123...........3....4.....936.4..'
 all_digits = '123456789'
 
 def assign_grid(board_values):
@@ -24,7 +25,8 @@ def eliminate(values):
     for box in solved_values:
         digit = values[box]
         for peer in peers[box]:
-            values[peer] = values[peer].replace(digit, '')
+            if digit in values[peer]:
+                values[peer] = values[peer].replace(digit, '')
     return values
 
 def naked_twins(values):
@@ -33,7 +35,6 @@ def naked_twins(values):
     for double in doubles_values:
         twin = values[double] # ex 23, 45, 53
         for unit in units[double]:
-            print(unit)
             twin_exists = False
             for box in unit:
                 if values[box] == twin and double != box:
@@ -44,9 +45,8 @@ def naked_twins(values):
                     potential_twin = values[box]
                     first_twin = twin[0]
                     second_twin = twin[1]
-                    print(first_twin, second_twin, potential_twin)
                     # match 27 and 2347
-                    if any(digit == first_twin for digit in potential_twin) and any(digit == second_twin for digit in potential_twin) and potential_twin != twin:
+                    if first_twin in potential_twin and second_twin in potential_twin and potential_twin != twin:
                         # remove twins from all other unit boxes
                         values[box] = values[box].replace(first_twin, '')
                         values[box] = values[box].replace(second_twin, '')
@@ -78,7 +78,6 @@ def reduce_puzzle(values):
         only_choice(values)
         solved_values_after = count_boxes(values, 1)
         stalled_or_solved = solved_values_before == solved_values_after or solved_values_after == 81
-        print(stalled_or_solved)
         if count_boxes(values, 0) > 0:
             print('empty boxes')
             return False
@@ -97,12 +96,12 @@ def search(values):
         sudoku_attempt = values.copy()
         sudoku_attempt[closest_unsolved_box] = value
         solved_puzzle = search(sudoku_attempt)
-        print(solved_puzzle)
         if solved_puzzle:
             print('solved!')
             return solved_puzzle
 
 
-grid = assign_grid(diagonal_string)
+grid = assign_grid(diagonal_2)
 search(grid)
+# search(before_naked_twins_1)
 # naked_twins(before_naked_twins_1)
