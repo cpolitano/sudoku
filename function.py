@@ -33,23 +33,23 @@ def naked_twins(values):
     doubles_values = [box for box in values if len(values[box]) == 2] # select boxes with two digits
     # evaluate units of each double to check for twins
     for double in doubles_values:
-        twin = values[double] # ex 23, 45, 53
+        twin_digits = values[double] # ex 23, 45, 53
         for unit in units[double]:
             twin_exists = False
             for box in unit:
-                if values[box] == twin and double != box:
+                if values[box] == twin_digits and double != box:
                     twin_exists = True
                     break
             if twin_exists:
                 for box in unit:
                     potential_twin = values[box]
-                    first_twin = twin[0]
-                    second_twin = twin[1]
+                    first_twin_digit = twin_digits[0]
+                    second_twin_digit = twin_digits[1]
                     # match 27 and 2347
-                    if first_twin in potential_twin and second_twin in potential_twin and potential_twin != twin:
+                    if first_twin_digit in potential_twin and second_twin_digit in potential_twin and potential_twin != twin_digits:
                         # remove twins from all other unit boxes
-                        values[box] = values[box].replace(first_twin, '')
-                        values[box] = values[box].replace(second_twin, '')
+                        values[box] = values[box].replace(first_twin_digit, '')
+                        values[box] = values[box].replace(second_twin_digit, '')
     return values
 
 def only_choice(values):
