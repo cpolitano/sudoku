@@ -6,6 +6,7 @@ another_string = '..3.2.6..9..3.5..1...8..4....81.29..7.......8..6..82.....6.95.
 harder_string = '4.....8.5.3..........7......2.....6.....8.4......1.......6.3.7.5..2.....1.4......'
 diagonal_string = '2.............62....1....7...6..8...3...9...7...6..4...4....8....52.............3'
 diagonal_2 = '1......2.....9.5...............8...4.........9..7123...........3....4.....936.4..'
+diagonal_3 = '9.1....8.8.5.7..4.2.4....6...7......5..............83.3..6......9................'
 all_digits = '123456789'
 
 def assign_grid(board_values):
@@ -31,25 +32,30 @@ def eliminate(values):
 
 def naked_twins(values):
     doubles_values = [box for box in values if len(values[box]) == 2] # select boxes with two digits
-    # evaluate units of each double to check for twins
+    # evaluate units of each double A2, D5 etc to check for twins
+    print(doubles_values)
     for double in doubles_values:
         twin_digits = values[double] # ex 23, 45, 53
         for unit in units[double]:
             twin_exists = False
             for box in unit:
-                if values[box] == twin_digits and double != box:
+                if values[box] == twin_digits and box != double:
+                    print("twin exists:", twin_digits, values[box], box, double)
                     twin_exists = True
                     break
             if twin_exists:
                 for box in unit:
-                    potential_twin = values[box]
+                    potential_twin = values[box]  # 27, 247
+                    print("digits in same unit ", potential_twin)
                     first_twin_digit = twin_digits[0]
                     second_twin_digit = twin_digits[1]
                     # match 27 and 2347
                     if first_twin_digit in potential_twin and second_twin_digit in potential_twin and potential_twin != twin_digits:
                         # remove twins from all other unit boxes
+                        print("removing digits from ", values[box])
                         values[box] = values[box].replace(first_twin_digit, '')
                         values[box] = values[box].replace(second_twin_digit, '')
+                        print("new values", values[box])
     return values
 
 def only_choice(values):
@@ -74,7 +80,7 @@ def reduce_puzzle(values):
     while not stalled_or_solved:
         solved_values_before = count_boxes(values, 1)
         eliminate(values)
-        naked_twins(values)
+        # naked_twins(values)
         only_choice(values)
         solved_values_after = count_boxes(values, 1)
         stalled_or_solved = solved_values_before == solved_values_after or solved_values_after == 81
@@ -101,7 +107,8 @@ def search(values):
             return solved_puzzle
 
 
-grid = assign_grid(diagonal_2)
-search(grid)
+# grid = assign_grid(diagonal_3)
+# search(grid)
 # search(before_naked_twins_1)
-# naked_twins(before_naked_twins_1)
+naked_twins(before_naked_twins_2)
+# naked_twins(naked_twins_3)
